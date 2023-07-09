@@ -1,0 +1,8 @@
+.env
+credentials
+.wav
+.mp4
+assets/
+sessions/
+*.tar
+*.gz
