@@ -1,5 +1,8 @@
 
+# Makefile for the assistant project
 
+# insert your own credentuials here
+include credentials/master//credentials/.env
 
 phony: .
 
@@ -45,7 +48,7 @@ list_voices:
 
 account:
 	@-python -m assistant.utils insert_account --name GoogleVoice --description 'Google voice provider' --json '/home/nd/repos/Projects/support-assistant/credentials/robotshop-378518-af03d284fd3b.json'  --platform 'Google' --active --link-id 1
-	@-python -m assistant.utils insert_account --name OpenAI --description 'OpenAI ChatGPT  provider' --api-key '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' --platform 'OpenAI' --active --link-id 1
+	@-python -m assistant.utils insert_account --name OpenAI --description 'OpenAI ChatGPT  provider' --api-key $openai_api_secret --platform 'OpenAI' --active --link-id 1
 
 list_accounts:
 	@-python -m assistant.utils list_accounts
