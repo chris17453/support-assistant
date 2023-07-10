@@ -3,20 +3,12 @@ import os
 import uuid
 import subprocess
 import json
-from tabulate import tabulate
 from . import db
 
 def list_cli():
     print("Video")
     # Fetch the avatars from the table
-    
-    data = db.session.query(db.Video).all()
-    if len(data) == 0:
-        print("No data found.")
-        return
-    headers = data[0].__table__.columns.keys()
-    rows = [[getattr(obj, column) for column in headers] for obj in data]
-    print(tabulate(rows, headers=headers))
+    db.list_cli(db.Video)
 
 
 
@@ -79,15 +71,22 @@ def get_by_length(link_id,avatar_id,length):
     record = db.session.query(db.Video).filter_by(length>length, link_id=link_id, avatar_id=avatar_id, active=True).order_by(asc(db.Video.length)).first()
     return record
 
-def get_closest_videos_by_length(avatar_id, link_id, target_length):
-    print("X{0} Y{1} Z{2} ".format(avatar_id, link_id, target_length))
+def get_closest_videos_by_length(avatar_id, link_id, length):
+    print("X{0} Y{1} Z{2} ".format(avatar_id, link_id, length))
     record = db.session.query(db.Video)\
         .join(db.Utterance, db.Utterance.video_id == db.Video.id)\
         .filter(db.Utterance.avatar_id == avatar_id)\
         .filter(db.Utterance.link_id == link_id)\
-        .filter(db.Video.length >= target_length, db.Video.active == True, db.Utterance.active == True)\
-        .order_by(db.Video.length)\
+        .filter(db.Video.length >= length, db.Video.active == True, db.Utterance.active == True)\
+        .order_by(asc(db.Video.length))\
         .first()
-
+    if record is None:
+        record = db.session.query(db.Video)\
+        .join(db.Utterance, db.Utterance.video_id == db.Video.id)\
+        .filter(db.Utterance.avatar_id == avatar_id)\
+        .filter(db.Utterance.link_id == link_id)\
+        .filter(db.Video.length < length, db.Video.active == True, db.Utterance.active == True)\
+        .order_by(desc(db.Video.length))\
+        .first()
     print(record)
     return record

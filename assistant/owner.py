@@ -1,6 +1,4 @@
-import os
 import uuid
-from tabulate import tabulate
 from . import db
 
 
@@ -8,13 +6,7 @@ from . import db
 def list_cli():
     print("Owners")
     # List all owners
-    owners = db.session.query(db.Owner).all()
-    owner_table = []
-    for owner in owners:
-        owner_table.append([owner.id, owner.name, owner.description, owner.active])
-
-    headers = ['ID', 'Name', 'Description', 'Active']
-    print(tabulate(owner_table, headers, tablefmt='grid'))
+    db.list_cli(db.Owner)
 
 
 def insert(name, description, active=True):

@@ -2,7 +2,7 @@
 # Makefile for the assistant project
 
 # insert your own credentuials here
-include credentials/master//credentials/.env
+include ./assets/master/credentials/.env
 
 phony: .
 
@@ -38,17 +38,21 @@ list_links:
 
 voice:
 	@-python -m assistant.utils insert_voice --name 'ChrisReal'   --gender male   --description 'Default' --voice 'en-US-Wavenet-I'  --account-id 1 --active --link-id 1
-	@-python -m assistant.utils insert_voice --name 'AltarAI'     --gender male   --description 'Default' --voice 'en-AU-News-G'     --account-id 1 --active --link-id 1
-	@-python -m assistant.utils insert_voice --name 'ChristinaAI' --gender female --description 'Default' --voice 'en-IN-Standard-C' --account-id 1 --active --link-id 1
+	@-python -m assistant.utils insert_voice --name 'AltarAI'     --gender male   --description 'Default' --voice 'en-IN-Standard-C'     --account-id 1 --active --link-id 1
+	@-python -m assistant.utils insert_voice --name 'ChristinaAI' --gender female --description 'Default' --voice 'en-GB-Neural2-F' --account-id 1 --active --link-id 1
 	@-python -m assistant.utils insert_voice --name 'ChrisAI'     --gender male   --description 'Default' --voice 'en-GB-News-M'     --account-id 1 --active --link-id 1
 
 list_voices:
 	@-python -m assistant.utils list_voices
 
 
-account:
-	@-python -m assistant.utils insert_account --name GoogleVoice --description 'Google voice provider' --json '/home/nd/repos/Projects/support-assistant/credentials/robotshop-378518-af03d284fd3b.json'  --platform 'Google' --active --link-id 1
-	@-python -m assistant.utils insert_account --name OpenAI --description 'OpenAI ChatGPT  provider' --api-key $openai_api_secret --platform 'OpenAI' --active --link-id 1
+account: account-google account-openai
+
+account-google:
+	@-python -m assistant.utils insert_account --name GoogleVoice --description 'Google voice provider' --json '/home/nd/repos/Projects/support-assistant/assets/master/credentials/robotshop-378518-af03d284fd3b.json'  --platform 'Google' --active --link-id 1
+
+account-openai:
+	@-python -m assistant.utils insert_account --name OpenAI --description 'OpenAI ChatGPT  provider' --api-key $(openai_api_secret) --platform 'OpenAI' --active --link-id 1
 
 list_accounts:
 	@-python -m assistant.utils list_accounts
@@ -56,9 +60,9 @@ list_accounts:
 
 avatar:
 	@-python -m assistant.utils insert_avatar --name ChrisIRL    --description 'Chris Real'        --active --link-id 1 --image-id 1 --voice-id 1 --pitch 1 --speed 1 --style Default
-	@-python -m assistant.utils insert_avatar --name AltarAI     --description 'Altar AI Gen1'     --active --link-id 1 --image-id 2 --voice-id 1 --pitch 1 --speed 1 --style Default
-	@-python -m assistant.utils insert_avatar --name ChristinaAI --description 'Christina AI Gen1' --active --link-id 1 --image-id 3 --voice-id 1 --pitch 1 --speed 1 --style Default
-	@-python -m assistant.utils insert_avatar --name ChrisAI     --description 'Chris AI Gen1'     --active --link-id 1 --image-id 4 --voice-id 1 --pitch 1 --speed 1 --style Default
+	@-python -m assistant.utils insert_avatar --name AltarAI     --description 'Altar AI Gen1'     --active --link-id 1 --image-id 2 --voice-id 2 --pitch 1 --speed 1 --style Default
+	@-python -m assistant.utils insert_avatar --name ChristinaAI --description 'Christina AI Gen1' --active --link-id 1 --image-id 3 --voice-id 3 --pitch 1 --speed 1 --style Default
+	@-python -m assistant.utils insert_avatar --name ChrisAI     --description 'Chris AI Gen1'     --active --link-id 1 --image-id 4 --voice-id 4 --pitch 1 --speed 1 --style Default
 
 list_avatars:
 	@-python -m assistant.utils list_avatars
@@ -92,14 +96,30 @@ list_audio:
 	@-python -m assistant.utils list_audio
 
 
+process:
+	@-python -m assistant.utils process --avatar-id 2  --text "Hello, I'm an AI Avatar"
+	@-python -m assistant.utils process --avatar-id 1  --text "Hello, I'm an AI Avatar"
+	@-python -m assistant.utils process --avatar-id 3  --text "Hello, I'm an AI Avatar"
+	@-python -m assistant.utils process --avatar-id 4  --text "Hello, I'm an AI Avatar"
+
+
 process-batch:
 	@-python -m assistant.utils process-batch --avatar-id 4  --file assets/batch/dubs.txt
 
 process-long:
 	python -m assistant.utils process --avatar-id 1	--text "In the tranquil meadow, under the azure sky dotted with fluffy white clouds, a gentle breeze rustles the vibrant grass, carrying the sweet scent of wildflowers. Bees buzz busily from blossom to blossom, diligently collecting nectar to make golden honey. Birds chirp melodiously, their songs harmonizing with the rustling leaves of the tall, majestic trees that provide shade and shelter. Sunlight filters through the branches, casting dappled shadows on the emerald carpet below. Nature's symphony unfolds, captivating the senses and filling the heart with tranquility, reminding us of the beauty and wonder that surrounds us every day. Please note that the above sentence may not have exactly one hundred words, as it is difficult to construct a sentence with precisely that word count while maintaining readability. However, it provides an example of a descriptive sentence that is relatively long and captures the essence of a tranquil natural setting"
 
+delete-account:
+	python -m assistant.utils delete-account --id 2 --link-id 1
+
 upload:
 	@rsync -ahuv  /home/nd/repos/Projects/support-assistant 10.90.0.80:/web/
 	@ssh root@10.90.0.80 'chown -R nginx:nginx /web/support-assistant/'
 
+# local debugging
+debug:
+	@pipenv run python -m assistant
 
+#server run (add a service though)
+run:
+	pipenv run uwsgi --ini uwsgi-config.ini

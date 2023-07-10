@@ -177,7 +177,11 @@ def process_data(session_id,data):
             model="gpt-3.5-turbo", messages=history
         )
     reply = chat.choices[0].message.content
-    utterance_obj=process.utterance_builder(1,reply,True)
+    avatar_rec=avatar.get_by_uuid(session['avatar'])
+    if avatar_rec==None:
+        return {'message': 'avatar failed to load'}, 500
+    print ("Using Avatar {0}:{1}".format(avatar_rec.name,avatar_rec.id))
+    utterance_obj=process.utterance_builder(avatar_rec.id,reply,True)
     audio_uuid=utterance_obj.audio.uuid
     video_uuid=utterance_obj.video.uuid
 

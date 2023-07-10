@@ -11,5 +11,8 @@ video_directory    = os.path.join( assets,'video')
 image_directory    = os.path.join( assets,'image')
 
 from . import account
-
-openai_api_secret  = account.get_by_name(name='OpenAI',link_id=1,).api_key
+try:
+    openai_api_secret  = account.get_by_name(name='OpenAI',link_id=1,).api_key
+except:
+    openai_api_secret  = None
+    

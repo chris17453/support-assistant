@@ -1,19 +1,14 @@
 import os
 import uuid
-from tabulate import tabulate
 from . import db
+from sqlalchemy import delete
+
 
 
 def list_cli():
     print("Accounts")
-    data =  db.session.query(db.Account).all()
-    if len(data) == 0:
-        print("No data found.")
-        return
-    headers = data[0].__table__.columns.keys()
-    rows = [[getattr(obj, column) for column in headers] for obj in data]
-    print(tabulate(rows, headers=headers))
-
+    db.list_cli(db.Account)
+    
 
 
 
@@ -57,3 +52,15 @@ def get_by_id(id):
 def get_by_name(link_id,name):
     record = db.session.query(db.Account).filter_by(link_id=link_id,name=name, active=True).first()
     return record
+
+
+def delete_by_name(link_id, name):
+    stmt = delete(db.Account).where(db.Account.name == name, db.Account.link_id == link_id)
+    db.session.execute(stmt)
+    db.session.commit()
+
+def delete_by_id(link_id, account_id):
+    stmt = delete(db.Account).where(db.Account.id == account_id, db.Account.link_id == link_id)
+    db.session.execute(stmt)
+    db.session.commit()
+

@@ -83,6 +83,13 @@ def insert_video(args):
 def insert_audio(args):
     audio.insert(args.link_id, args.path, args.active)
 
+def delete_account(args):
+     if args.id:
+          account.delete_by_id(args.link_id,args.id)
+     elif args.name:
+          account.delete_by_name(args.link_id,args.name)
+     else:
+          print("Please specify either --id or --name")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Assistant Utility")
@@ -197,6 +204,13 @@ if __name__ == "__main__":
     process_batch_parser.add_argument('--file'     ,  required=True, help='full with the text you want spoken')
 
 
+    # delete a record for an  "account"
+    delete_account_parser = subparsers.add_parser('delete-account', help='delete an account record')
+    delete_account_parser.add_argument('--id'        , type=int, help='account id of the account')
+    delete_account_parser.add_argument('--link-id'   , type=int, required=True, help='the link-id id of the account')
+    delete_account_parser.add_argument('--name'      ,           help='name of the account you want to delete')
+
+
     args = parser.parse_args()
     if  args.command == 'db':       
                     if args.init:
@@ -244,5 +258,7 @@ if __name__ == "__main__":
          process.process(args.avatar_id,args.text)
     elif args.command == 'process-batch'   :
          process.process_batch(args.avatar_id,args.file)
+    elif args.command == 'delete-account'   :
+         delete_account(args)
     else :
         parser.print_help()

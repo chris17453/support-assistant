@@ -1,24 +1,14 @@
 import os
 import uuid
-from tabulate import tabulate
 from . import db
 
 
 def list_cli():
     print("Voices")
     # Retrieve all voices from the database
-    voices = db.session.query(db.Voice).all()
+    db.list_cli(db.Voice)
 
-    # Prepare voice data for tabular display
-    voice_table = []
-    for voice in voices:
-        voice_table.append([voice.id, voice.account_id, voice.name, voice.description, voice.gender , voice.link_id, voice.active])
 
-    # Define table headers
-    headers = ['ID', 'Name', 'Description', 'Gender', 'Link ID', 'Active']
-
-    # Display voices in tabular format
-    print(tabulate(voice_table, headers, tablefmt='grid'))
 
 def insert(link_id, account_id, name, description, gender, voice, active=True):
     # Create a new Voice instance

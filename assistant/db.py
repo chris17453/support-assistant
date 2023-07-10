@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignK
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import uuid
-import tabulate
+from  tabulate import tabulate
 
 from . import settings
 # Create the database engine
@@ -46,6 +46,22 @@ def data_describe(data):
             data_describe_single(item)
     else:
         data_describe_single(data)
+
+def list_cli(db_base_t):
+    # Fetch the avatars from the table
+    
+    data = session.query(db_base_t).all()
+    if len(data) == 0:
+        print("No data found.")
+        return
+    headers = data[0].__table__.columns.keys()
+    rows = [[getattr(obj, column) for column in headers] for obj in data]
+    output=tabulate(rows, headers=headers, tablefmt="grid")
+    print("-----------------------")
+    print(output)
+    print("End Table")
+
+
 
 def data_describe_single(data):
     try:
@@ -179,7 +195,7 @@ class Utterance(Base):
     created = Column(DateTime, server_default=func.now())
     finished = Column(DateTime)
     active = Column(Boolean)
-    __table_args__ = (UniqueConstraint('text', 'link_id'),)
+    __table_args__ = (UniqueConstraint('text','avatar_id', 'link_id'),)
 
 class Audio(Base):
     __tablename__ = 'audio'

@@ -1,17 +1,11 @@
 import os
-from tabulate import tabulate
 from . import db
 
 
 def list_cli():
     print("Links")
-    links = db.session.query(db.Link).all()
-    link_table = []
-    for link in links:
-        link_table.append([link.id, link.name, link.owner_id, link.description, link.active])
-
-    headers = ['ID', 'Name', 'Owner ID', 'Description', 'Active']
-    print(tabulate(link_table, headers, tablefmt='grid'))
+    # Retrieve all links from the database
+    db.list_cli(db.Link)
 
 def insert(owner_id, name,  description, active=True):
     # Create a new Link instance

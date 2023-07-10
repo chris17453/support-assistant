@@ -28,7 +28,7 @@ class utterance_builder:
         self.load_deps()
         
         
-        self.utterance=utterance.get_by_text_and_link(text,self.avatar.link_id)
+        self.utterance=utterance.get_by_text_and_link(text,self.avatar.link_id,avatar_id=self.avatar_id)
 
         # if this is an already built utterance, it needs a video
         if self.utterance:
@@ -59,8 +59,9 @@ class utterance_builder:
             db.session.commit()
         else:
             self.dub_video()
+            self.finished=datetime.now()
             self.video=video.insert(self.avatar.link_id, self.video_file,dub=True, active=True)
-            self.utterance=utterance.insert(self.avatar.link_id, avatar_id=self.avatar_id,audio_id=self.audio.id,video_id=self.video.id, text=self.text, count=count, variance=1, created=self.created, finished=self.finished, processed=True, active=True)
+            self.utterance=utterance.insert(self.avatar.link_id, avatar_id=self.avatar_id,audio_id=self.audio.id,video_id=self.video.id, text=self.text, count=count, variance=1, created=self.created, finished=self.finished, processed=False, active=True)
     
     def build_new_utterance(self):
         print("Utterance does not exist")
@@ -85,7 +86,7 @@ class utterance_builder:
                 self.dub_video()
                 self.finished=datetime.now()
                 self.video=video.insert(self.avatar.link_id, self.video_file,dub=True, active=True)
-                self.utterance=utterance.insert(self.avatar.link_id, avatar_id=self.avatar_id,audio_id=self.audio.id,video_id=self.video.id, text=self.text, count=count, variance=1, created=self.created, finished=self.finished, processed=True, active=True)
+                self.utterance=utterance.insert(self.avatar.link_id, avatar_id=self.avatar_id,audio_id=self.audio.id,video_id=self.video.id, text=self.text, count=count, variance=1, created=self.created, finished=self.finished, processed=False, active=True)
         
 
     def generate_cmd(self):    
@@ -108,11 +109,24 @@ class utterance_builder:
         #process.wait()
         output, error = process.communicate()
 
-        output = output.decode("utf-8").strip()
-        file=output.split("\n")[-1]
-        file=file.split("named:")[1]
-        file=file.strip()
-        self.video_file=file
+        try:
+            output = output.decode("utf-8").strip()
+            file=output.split("\n")[-1]
+            
+            file=file.split("named:")[1]
+            file=file.strip()
+            self.video_file=file
+        except:
+            print("Error in finding filename")
+            print("------------------")
+            print(output)
+            print("------------------")
+            print(error)
+            print("------------------")
+            print(file)
+            print(" ".join(cmd))
+             
+            self.video_file=None
 
         print("video file: {0}".format(self.video_file))
 
@@ -120,6 +134,7 @@ class utterance_builder:
         # The subprocess has completed
         print("Subprocess completed with return code:", process.returncode)
         #print(" ".join(cmd))
+
 
 
 
@@ -143,7 +158,7 @@ class utterance_builder:
         #os.path.join(self.video.path,self.video.name)
         # Get the duration of the audio file
         audio_duration = self.audio.length
-        self.video=video.get_closest_videos_by_length(self.audio.link_id,self.avatar_id,self.audio.length)
+        self.video=video.get_closest_videos_by_length(link_id=self.audio.link_id,avatar_id=self.avatar_id,length=self.audio.length)
         if self.video==None:
             print("No video found this length")
             return
@@ -155,17 +170,21 @@ class utterance_builder:
         print(audio_path)
         print(self.audio.name)
 
-        output_path=os.path.join(os.path.dirname(settings.video_directory),str(uuid.uuid4())+".mp4")
+        output_path=os.path.join(settings.video_directory,str(uuid.uuid4())+".mp4")
         # Get the duration of the video file
         video_duration =self.video.length
 
         if audio_duration < video_duration:
             # Trim video if it is longer than the audio
-            trim_cmd = ['ffmpeg', '-i', video_path, '-i', audio_path,  '-shortest', '-map', '0:v', '-map', '1:a','-y', output_path]
+            trim_cmd = ['ffmpeg', '-i', video_path, '-i', audio_path,  '-shortest','-c:v','copy', '-map', '0:v', '-map', '1:a','-y', output_path]
+            print ("Trimming video")
+            print(" ".join(trim_cmd))
             subprocess.run(trim_cmd)
         else:
             # Loop video if it is shorter than the audio
-            loop_cmd = [ 'ffmpeg' , '-stream_loop', '-1', '-i', video_path ,'-i', audio_path, '-shortest', '-map', '0:v:0', '-map', '1:a:0','-y', output_path]
+            loop_cmd = [ 'ffmpeg' , '-stream_loop', '-1', '-i', video_path ,'-i', audio_path, '-shortest', '-c:v','copy','-map', '0:v:0', '-map', '1:a:0','-y', output_path]
+            print ("Looping video")
+            print(" ".join(loop_cmd))
             subprocess.run(loop_cmd)
 
         self.video_file=output_path

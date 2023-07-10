@@ -1,19 +1,11 @@
 import os
 import uuid
-from tabulate import tabulate
 from . import db
 
 def list_cli():
-    print("Avatars")
-    # Fetch the avatars from the table
-    
-    data = db.session.query(db.Avatar).all()
-    if len(data) == 0:
-        print("No data found.")
-        return
-    headers = data[0].__table__.columns.keys()
-    rows = [[getattr(obj, column) for column in headers] for obj in data]
-    print(tabulate(rows, headers=headers))
+    print("Avatar")
+    db.list_cli(db.Avatar)
+
 
 
 def insert(link_id, image_id, voice_id, name, description, style, speed=1, pitch=1,  active=True):

@@ -1,17 +1,12 @@
 import os
 import uuid
-from tabulate import tabulate
 from . import db
 
 
 def list_cli():
     print("Utterance")
     # Fetch the avatars from the table
-    data = db.session.query(db.Utterance).all()
-    headers = data[0].__table__.columns.keys()
-    rows = [[getattr(obj, column) for column in headers] for obj in data]
-    print(tabulate(rows, headers=headers))
-
+    db.list_cli(db.Utterance)
 
 
 
@@ -25,8 +20,8 @@ def insert(link_id, avatar_id=None, audio_id=None, video_id=None, text=None, cou
         audio_id=audio_id,
         video_id=video_id,
         variance=variance,
-        processed = False,
-        finished = None,
+        processed = processed,
+        finished = finished,
         active=active
     )
 
@@ -41,8 +36,8 @@ def get_by_id(id):
     record = db.session.query(db.Utterance).filter_by(id=id, active=True).first()
     return record
 
-def get_by_text_and_link(text,link_id):
-    record = db.session.query(db.Utterance).filter_by(text=text,link_id=link_id,active=True).first()
+def get_by_text_and_link(text,link_id,avatar_id):
+    record = db.session.query(db.Utterance).filter_by(text=text,link_id=link_id,avatar_id=avatar_id,active=True).first()
     return record
 
 def update_by_id(id, **kwargs):

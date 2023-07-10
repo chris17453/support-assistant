@@ -1,27 +1,14 @@
 import os
 import uuid
 from PIL import Image as PILImage
-from tabulate import tabulate
 from . import db
 from . import settings
 
 
 def list_cli():
-    print ("Images")
-    # Fetch all images from the table
-    images = db.session.query(db.Image).all()
+    print("Image")
+    db.list_cli(db.Image)
 
-    # Convert the image objects to a list of lists for tabular display
-    image_data = [[image.id, image.name, image.description, image.image_name, image.image_path,
-                image.crop, image.width, image.height, image.uuid, image.mime, image.link_id,
-                image.active] for image in images]
-
-    # Define the table headers
-    headers = ["ID", "Name", "Description", "Image Name", "Image Path", "Crop", "Width", "Height",
-            "UUID", "MIME", "Link ID", "Active"]
-
-    # Print the table using tabulate
-    print(tabulate(image_data, headers=headers, tablefmt="grid"))
 
 
 

@@ -4,7 +4,6 @@ import os
 import subprocess
 import json
 import uuid
-from tabulate import tabulate
 from . import settings
 from . import db
 from .services import google_tts
@@ -13,11 +12,9 @@ from .services import google_tts
 
 def list_cli():
     print("Audio")
-    # Fetch the avatars from the table
-    data = db.session.query(db.Audio).all()
-    headers = data[0].__table__.columns.keys()
-    rows = [[getattr(obj, column) for column in headers] for obj in data]
-    print(tabulate(rows, headers=headers))
+    db.list_cli(db.Audio)
+
+
 
 def watson_text_to_Wav(voicename, text):
     from ibm_watson import TextToSpeechV1
@@ -104,7 +101,7 @@ def get_by_uuid(uuid):
 
 def create(account,voice, text,path):
     results=None
-    print("Creating audio for {0} at {1}".format(account.platform,path))
+    print("Creating audio for {0} at {1} using {2}".format(account.platform,path,voice.voice))
     print(account.platform)
     if account.platform.lower()=="google":
         credentials=account.json

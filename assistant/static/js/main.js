@@ -21,8 +21,8 @@
         this.message_history=[];
           
         this.get_token();
-   
         
+        this.load_avatar();
 
         // add event handlers for the speech recognition
         this.recognition.onstart = () => {
@@ -258,6 +258,7 @@
     set_poster(data){
         console.log("Setting Poster")
         this.video_player.poster="image/"+data.poster;
+        this.video_player.src="";
 
     }
 
