@@ -119,3 +119,120 @@ position:relative;
 float:right;
 
 }
+
+
+.toggle-checkbox {
+    display: none;
+  }
+  
+  .toggle-label {
+      margin: 10px;
+  
+      display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: #ccc;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 28px;
+    bottom: 2px;
+    background-color: #fff;
+    border-radius: 30px;
+    transition: 0.4s;
+  }
+  
+  .toggle-checkbox:checked + .toggle-label .toggle-slider {
+    transform: translateX(28px);
+  }
+  
+  .toggle-checkbox:checked + .toggle-label {
+    background-color: #2196F3;
+  }
+  
+  #chat-container {
+  width: 1080px; /* Adjust this to set the div's width */
+  margin-bottom:0px;
+  background-repeat: no-repeat;
+  background-size:contain;
+  position: relative;
+  transition: 0.4s;
+  overflow: hidden;
+  background:#1f3624;
+  }
+  
+  
+  #button_bar{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .centered-text {
+    text-align: center;
+  }
+  
+  .shrink {
+    width: 1000px;
+    height: 0px;
+    margin-top:10px;
+  }
+  
+  .grow {
+    width: 1080px !important;
+    height: 350px !important; 
+  }
+  
+  
+  
+  /* Styling the outer select container */
+  .custom-select {
+      position: relative;
+      width: 200px;
+      height: 40px;
+      background-color: #232323;
+      border-radius: 5px;
+      overflow: hidden;
+      transition: box-shadow 0.5s ease;
+      box-shadow: 0px 0px 5px 2px rgba(0, 150, 255, 0.75);
+  }
+  
+  /* Styling the select element */
+  .custom-select select {
+      width: 100%;
+      height: 100%;
+      -webkit-appearance: none;  /* Remove default select dropdown arrow */
+      -moz-appearance: none;
+      appearance: none;
+      background-color: transparent;
+      color: #0af;
+      padding: 10px;
+      border: none;
+      outline: none;
+  }
+  
+  /* Adding custom dropdown arrow */
+  .custom-select::after {
+      content: '\25BC';
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      color: #0af;
+      pointer-events: none;
+  }
+  
+  /* Styling on hover */
+  .custom-select:hover {
+      box-shadow: 0px 0px 10px 4px rgba(0, 150, 255, 1);
+  }
+  
+  
+  
+  

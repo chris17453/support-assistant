@@ -7,125 +7,9 @@
     <link href="css/main.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="icon" href="ui/atom.png" type="image/x-icon">
-<style>
-.toggle-checkbox {
-  display: none;
-}
-
-.toggle-label {
-    margin: 10px;
-
-    display: inline-block;
-  width: 60px;
-  height: 30px;
-  background-color: #ccc;
-  border-radius: 30px;
-  position: relative;
-  cursor: pointer;
-}
-
-.toggle-slider {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 28px;
-  bottom: 2px;
-  background-color: #fff;
-  border-radius: 30px;
-  transition: 0.4s;
-}
-
-.toggle-checkbox:checked + .toggle-label .toggle-slider {
-  transform: translateX(28px);
-}
-
-.toggle-checkbox:checked + .toggle-label {
-  background-color: #2196F3;
-}
-
-#chat-container {
-width: 1080px; /* Adjust this to set the div's width */
-margin-bottom:0px;
-background-repeat: no-repeat;
-background-size:contain;
-position: relative;
-transition: 0.4s;
-overflow: hidden;
-}
-
-
-#button_bar{
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.centered-text {
-  text-align: center;
-}
-
-.shrink {
-  width: 1000px;
-  height: 0px;
-  margin-top:10px;
-}
-
-.grow {
-  width: 1080px !important;
-  height: 350px !important; 
-}
-
-
-
-/* Styling the outer select container */
-.custom-select {
-    position: relative;
-    width: 200px;
-    height: 40px;
-    background-color: #232323;
-    border-radius: 5px;
-    overflow: hidden;
-    transition: box-shadow 0.5s ease;
-    box-shadow: 0px 0px 5px 2px rgba(0, 150, 255, 0.75);
-}
-
-/* Styling the select element */
-.custom-select select {
-    width: 100%;
-    height: 100%;
-    -webkit-appearance: none;  /* Remove default select dropdown arrow */
-    -moz-appearance: none;
-    appearance: none;
-    background-color: transparent;
-    color: #0af;
-    padding: 10px;
-    border: none;
-    outline: none;
-}
-
-/* Adding custom dropdown arrow */
-.custom-select::after {
-    content: '\25BC';
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    color: #0af;
-    pointer-events: none;
-}
-
-/* Styling on hover */
-.custom-select:hover {
-    box-shadow: 0px 0px 10px 4px rgba(0, 150, 255, 1);
-}
-
-
-
-
-</style>
 </head>
-    <body style="margin-right: 0px;">
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-left">
+    <body  style="margin-right: 0px;">
+        <nav  class="navbar navbar-expand-md navbar-dark bg-primary fixed-left">
             <a class="navbar-brand" href="">Chris Bot</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -147,9 +31,13 @@ overflow: hidden;
         </nav>
 
         <div class="container">
+          <div id="background">
+            <h1><strong class="red">C</strong>omputational <Strong class="red">H</Strong>euristic <strong class="red">R</strong>obust <strong class="red">I</strong>ntelligent <strong class="red">S</strong>olutions</h1>
+            <p>Personal Support System</p>
+
+          </div>
             <div class='jumbotron'> 
-                <h1><strong class="red">C</strong>omputational <Strong class="red">H</Strong>euristic <strong class="red">R</strong>obust <strong class="red">I</strong>ntelligent <strong class="red">S</strong>olutions</h1>
-                <p>Personal Support System</p>
+
     
                 <div class='conversation jumbotron'> 
                     <div class="image-container">
@@ -190,4 +78,18 @@ overflow: hidden;
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/vanta/three.r134.min.js"></script>
+    <script src="js/vanta/vanta.waves.min.js"></script>
+    <script>
+    VANTA.WAVES({
+      el: "#background",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00
+    })
+    </script>
     </html>

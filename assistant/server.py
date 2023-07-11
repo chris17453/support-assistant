@@ -46,6 +46,10 @@ def index():
 def serve_js(path):
     return send_from_directory('static/js', path)
 
+@server_blueprint.route('/js/vanta/<path:path>')
+def serve_js2(path):
+    return send_from_directory('static/js/vanta', path)
+
 @server_blueprint.route('/css/<path:path>')
 def serve_css(path):
     return send_from_directory('static/css', path)
